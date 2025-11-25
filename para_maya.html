@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Maya 💜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a0033 0%, #2d1b4e 50%, #4a2c6b 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Estrellas de fondo */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 600px;
+            width: 90%;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(138, 43, 226, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #e0b0ff;
+            text-shadow: 0 0 20px rgba(224, 176, 255, 0.5);
+        }
+
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            color: #d8b0ff;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #f0e0ff;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .question {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            color: #e0b0ff;
+            font-weight: bold;
+        }
+
+        .progress {
+            margin-bottom: 30px;
+            color: #d8b0ff;
+            font-size: 1.1em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .option {
+            padding: 20px;
+            background: rgba(138, 43, 226, 0.3);
+            border: 2px solid rgba(224, 176, 255, 0.5);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            color: #fff;
+        }
+
+        .option:hover {
+            background: rgba(138, 43, 226, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(224, 176, 255, 0.4);
+        }
+
+        .option.correct {
+            background: rgba(76, 175, 80, 0.5);
+            border-color: #4CAF50;
+            animation: pulse 0.5s;
+        }
+
+        .option.incorrect {
+            background: rgba(244, 67, 54, 0.5);
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .angry-cat {
+            width: 200px;
+            margin: 30px auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(255, 165, 0, 0.5);
+        }
+
+        .restart-message {
+            font-size: 1.8em;
+            color: #ff6b6b;
+            margin: 20px 0;
+            font-weight: bold;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+
+        .final-message {
+            font-size: 1.3em;
+            line-height: 2;
+            color: #f0e0ff;
+            margin: 30px 0;
+            text-align: left;
+            padding: 20px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 15px;
+            border-left: 4px solid #e0b0ff;
+        }
+
+        .hearts {
+            font-size: 3em;
+            margin: 20px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .music-note {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2em;
+            animation: bounce 2s ease-in-out infinite;
+            z-index: 1000;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, #8a2be2, #da70d6);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 25px rgba(138, 43, 226, 0.5);
+        }
+
+        .loading {
+            font-size: 1.5em;
+            margin: 30px 0;
+            color: #ffd700;
+        }
+
+        .dots {
+            display: inline-block;
+        }
+
+        .dots span {
+            animation: loading 1.4s infinite;
+            animation-fill-mode: both;
+        }
+
+        .dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes loading {
+            0%, 80%, 100% { opacity: 0; }
+            40% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Estrellas de fondo -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Nota musical -->
+    <div class="music-note">🎵</div>
+
+    <!-- Audio de fondo -->
+    <audio id="background-music" loop>
+        <source src="viento.mp4" type="audio/mp4">
+    </audio>
+
+    <div class="container">
+        <!-- Pantalla 1: Inicio del Quiz -->
+        <div id="start-screen" class="screen active">
+            <h1>💜 10 Meses Juntos 💜</h1>
+            <div class="hearts">💕✨💕</div>
+            <h2>Para mi Pulguita</h2>
+            <p class="subtitle">Preparé algo especial para vos...<br>¿Lista para un pequeño juego?</p>
+            <button onclick="startQuiz()">¡Empecemos! 🌙</button>
+        </div>
+
+        <!-- Pantalla 3: Quiz -->
+        <div id="quiz-screen" class="screen">
+            <div class="progress" id="progress">Pregunta 1 de 7</div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+        </div>
+
+        <!-- Pantalla 4: Angry Cat (respuesta incorrecta en pregunta 7) -->
+        <div id="angry-cat-screen" class="screen">
+            <h1 class="restart-message">¡DI LA VERDAD! 😾</h1>
+            <img src="titoburlon.jpg" alt="Gatito enojado" class="angry-cat">
+            <div class="loading">Reiniciando el cuestionario<span class="dots"><span>.</span><span>.</span><span>.</span></span></div>
+        </div>
+
+        <!-- Pantalla 5: Mensaje Final -->
+        <div id="final-screen" class="screen">
+            <h1>💜 10 Meses de Nosotros 💜</h1>
+            <div class="hearts">✨💕✨</div>
+            <div class="final-message">
+                <p><strong>Maya,</strong></p>
+                <br>
+                <p>Ya 10 meses desde que me presenté con vos como Luis, 10 meses cuando jugamos con ramitas en mira, 10 meses de nosotros.</p>
+                <br>
+                <p>Sé que a vos te encantan las bromas que no hacen reír a nadie más, a mí lo único que me importa es verte reír porque vivo en tu risa amor.</p>
+                <br>
+                <p>De mí sabés hasta cosas que ni yo, sos mi enciclopedia personal, hacés todo lo posible porque me sienta amado.</p>
+                <br>
+                <p><strong>Gracias por estos 10 meses amor.</strong></p>
+                <p><strong>Te amo. 💜</strong></p>
+                <br>
+                <p style="text-align: right;">— Luis</p>
+            </div>
+            <div class="hearts">💕🌙💕</div>
+        </div>
+    </div>
+
+    <script>
+        // Generar estrellas
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+
+        // Preguntas del quiz
+        const questions = [
+            {
+                question: "¿Quién habló primero? 💬",
+                options: ["Luis", "Maya"],
+                correct: 0
+            },
+            {
+                question: "¿De dónde era mi suéter? 👕",
+                options: ["Colombia", "Aeropostale", "Abercrombie", "Nike"],
+                correct: 0
+            },
+            {
+                question: "¿Primer día que te regalé flores? 🌹",
+                options: ["26 de enero", "15 de enero", "20 de enero", "30 de enero"],
+                correct: 0
+            },
+            {
+                question: "¿Cuál es el apodo especial que te digo? 💕",
+                options: ["Pulguita", "Gonzala Dolores de Jesús", "Martina Eclenerica", "Gonsaturra Glaconda"],
+                correct: 0
+            },
+            {
+                question: "¿Dónde jugamos con espadas de ramitas? ⚔️",
+                options: ["Miraflores", "Narnia", "En el patio de mi tía Gonzala"],
+                correct: 0
+            },
+            {
+                question: "¿Quién resultó peor en el incidente del uber? 🚗",
+                options: ["El perrito", "Luis", "Maya", "El uber :("],
+                correct: 0
+            },
+            {
+                question: "¿Te amo más? 💜",
+                options: ["Sí", "No"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let restartingQuiz = false;
+
+        // Función para cambiar de pantalla
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Iniciar quiz
+        function startQuiz() {
+            currentQuestion = 0;
+            restartingQuiz = false;
+            showScreen('quiz-screen');
+            showQuestion();
+            
+            // Reproducir música de fondo
+            const music = document.getElementById('background-music');
+            music.play().catch(e => console.log('Error al reproducir música:', e));
+        }
+
+        // Mostrar pregunta
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('progress').textContent = `Pregunta ${currentQuestion + 1} de ${questions.length}`;
+            document.getElementById('question').textContent = q.question;
+            
+            const optionsContainer = document.getElementById('options');
+            optionsContainer.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const button = document.createElement('div');
+                button.className = 'option';
+                button.textContent = option;
+                button.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Verificar respuesta
+        function checkAnswer(selectedIndex) {
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            // Deshabilitar todas las opciones
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            
+            if (selectedIndex === q.correct) {
+                options[selectedIndex].classList.add('correct');
+                setTimeout(() => {
+                    currentQuestion++;
+                    if (currentQuestion < questions.length) {
+                        showQuestion();
+                    } else {
+                        showScreen('final-screen');
+                    }
+                }, 1000);
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                
+                // Si es la pregunta 7 y respondió "No"
+                if (currentQuestion === 6) {
+                    setTimeout(() => {
+                        showScreen('angry-cat-screen');
+                        setTimeout(() => {
+                            startQuiz(); // Reiniciar desde el inicio
+                        }, 3000);
+                    }, 1000);
+                } else {
+                    setTimeout(() => {
+                        options[selectedIndex].classList.remove('incorrect');
+                        options.forEach(opt => opt.style.pointerEvents = 'auto');
+                    }, 1000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
